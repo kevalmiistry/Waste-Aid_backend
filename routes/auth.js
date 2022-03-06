@@ -14,8 +14,8 @@ router.post('/createuser', [
     body('password', 'Password Must Be Of 8 Characters').isLength({ min: 8 })],
     async (req, res) => {
         let success = false
-        // if there are errors, return Bad request and errors 
-        const errors = validationResult(req);
+        // if there are errors, return Bad request and errors
+        const errors = validationResult(req)
         if (!errors.isEmpty()) {
             const erArr = errors.array()
             return res.status(400).json({ success, error: erArr })
@@ -94,7 +94,7 @@ router.post('/login', [
 // ROUTE 3: Get Logged in User Details at|POST /api/auth/getuser | - Login Required
 router.post('/getuser', fetchUser, async (req, res) => {
     try {
-        let userId = req.user.id;
+        let userId = req.user.id
         const user = await User.findById(userId).select('-password')
         res.send(user)
     } catch (error) {

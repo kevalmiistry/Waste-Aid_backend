@@ -29,9 +29,17 @@ const postSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    amount_collected: {
+        type: Number,
+        default: 0
+    },
+    user_count: {
+        type: Number,
+        default: 0
+    },
     images: {
         image_1: {
-            img_url: {
+            url: {
                 type: String,
                 default: null
             },
@@ -41,7 +49,7 @@ const postSchema = mongoose.Schema({
             }
         },
         image_2: {
-            img_url: {
+            url: {
                 type: String,
                 default: null
             },
@@ -51,7 +59,7 @@ const postSchema = mongoose.Schema({
             }
         },
         image_3: {
-            img_url: {
+            url: {
                 type: String,
                 default: null
             },
@@ -61,7 +69,7 @@ const postSchema = mongoose.Schema({
             }
         },
         image_4: {
-            img_url: {
+            url: {
                 type: String,
                 default: null
             },
@@ -71,7 +79,7 @@ const postSchema = mongoose.Schema({
             }
         },
         image_5: {
-            img_url: {
+            url: {
                 type: String,
                 default: null
             },
@@ -81,7 +89,7 @@ const postSchema = mongoose.Schema({
             }
         },
         image_6: {
-            img_url: {
+            url: {
                 type: String,
                 default: null
             },
@@ -91,7 +99,7 @@ const postSchema = mongoose.Schema({
             }
         },
         image_7: {
-            img_url: {
+            url: {
                 type: String,
                 default: null
             },
@@ -101,7 +109,7 @@ const postSchema = mongoose.Schema({
             }
         },
         image_8: {
-            img_url: {
+            url: {
                 type: String,
                 default: null
             },
@@ -111,7 +119,7 @@ const postSchema = mongoose.Schema({
             }
         },
         image_9: {
-            img_url: {
+            url: {
                 type: String,
                 default: null
             },
@@ -121,7 +129,7 @@ const postSchema = mongoose.Schema({
             }
         },
         image_10: {
-            img_url: {
+            url: {
                 type: String,
                 default: null
             },
@@ -130,14 +138,6 @@ const postSchema = mongoose.Schema({
                 default: null
             }
         },
-    },
-    amount_collected: {
-        type: Number,
-        default: 0
-    },
-    user_count: {
-        type: Number,
-        default: 0
     },
     date: {
         type: Date,
