@@ -30,11 +30,11 @@ const postSchema = mongoose.Schema({
         required: true,
     },
     amount_collected: {
-        type: Number,
+        type: String,
         default: 0
     },
     user_count: {
-        type: Number,
+        type: String,
         default: 0
     },
     images: {
