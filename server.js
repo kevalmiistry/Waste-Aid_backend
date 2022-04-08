@@ -21,5 +21,6 @@ app.use(bodyParser.json())
 
 app.use('/api/auth/', require('./routes/auth'))
 app.use('/api/post/', require('./routes/post'))
+app.use('/api/token/', require('./routes/token'))
 
 app.listen(PORT, () => console.log(`Server listening at PORT:${PORT}`))

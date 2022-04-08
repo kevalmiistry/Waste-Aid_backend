@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const postSchema = mongoose.Schema({
-    user_id: {
+    am_id: {
         type: String,
         required: true
     },
@@ -22,19 +22,19 @@ const postSchema = mongoose.Schema({
         required: true
     },
     target: {
-        type: String,
+        type: Number,
         default: null
     },
     contact_number: {
-        type: String,
+        type: Number,
         required: true,
     },
     amount_collected: {
-        type: String,
+        type: Number,
         default: 0
     },
     user_count: {
-        type: String,
+        type: Number,
         default: 0
     },
     images: {

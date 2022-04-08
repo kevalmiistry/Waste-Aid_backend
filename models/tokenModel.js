@@ -5,12 +5,12 @@ const tokenSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    amount: {
-        type: Number,
-        required: true
-    },
     am_id: {
         type: String,
+        required: true
+    },
+    amount: {
+        type: Number,
         required: true
     },
     recieved: {
@@ -22,3 +22,6 @@ const tokenSchema = mongoose.Schema({
         required: true
     }
 })
+
+const Token = mongoose.model('tokens', tokenSchema)
+module.exports = Token

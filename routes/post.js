@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const upload = require('multer')()
 const fetchUser = require('../middleware/fetchUser')
 const Post = require('../models/postModel')
 const cloudinary = require('../utils/Cloudinary.js')
@@ -8,14 +7,25 @@ const cloudinary = require('../utils/Cloudinary.js')
 // ROUTE 1: Fetch all post at|POST /api/post/fetchposts | - Login Required
 router.post('/fetchposts', fetchUser, async (req, res) => {
     try {
-        const posts = await Post.find().sort({ _id: 1 })
-        res.json({ posts })
+        const posts = await Post.find().sort({ _id: -1 })
+        res.json(posts)
     } catch (error) {
         res.status(500).json({ error: 'Some Internal Error Occured' })
     }
 })
 
-// ROUTE 1: Add new Post at|POST /api/post/addpost | - Login Required
+// ROUTE 2: Fetch One post at|POST /api/post/fetchonepost | - Login Required
+router.post('/fetchonepost', fetchUser, async (req, res) => {
+    try {
+        const { id } = req.body
+        const post = await Post.find({ _id: id })
+        res.json(post)
+    } catch (error) {
+        res.status(500).json({ error: 'Some Internal Error Occured' })
+    }
+})
+
+// ROUTE 3: Add new Post at|POST /api/post/addpost | - Login Required
 router.post('/addpost', fetchUser, async (req, res) => {
     try {
         const { am_name, title, description, address, target, contact_number, amount_collected, user_count } = req.body
@@ -28,11 +38,9 @@ router.post('/addpost', fetchUser, async (req, res) => {
             let r = await cloudinary.uploader.upload(img.tempFilePath)
             result = { ...result, [property]: r }
         }
-        console.log('*********Result*******')
-        console.log(result)
 
         const newPost = await Post.create({
-            user_id: req.user.id,
+            am_id: req.user.id,
             am_name,
             title,
             description,
@@ -87,6 +95,34 @@ router.post('/addpost', fetchUser, async (req, res) => {
 
         res.json({ success: true, newPost })
 
+    } catch (error) {
+        res.status(500).json({ error: 'Some Internal Error Occured' })
+    }
+})
+
+// ROUTE 4: Fetch Aid-man's Posts at|POST /api/post/fetchampost | - Login Required
+router.post('/fetchampost', fetchUser, async (req, res) => {
+    try {
+        const amid = req.user.id
+        const post = await Post.find({ am_id: amid }).sort({ _id: -1 })
+        res.json(post)
+    } catch (error) {
+        res.status(500).json({ error: 'Some Internal Error Occured' })
+    }
+})
+
+// ROUTE 5: Delete Aid-man's Posts at|POST /api/post/delete | - Login Required
+router.post('/delete', fetchUser, async (req, res) => {
+    try {
+        const id = req.body.id
+        const amid = req.user.id
+        const post = await Post.find({ _id: id })
+        if (post[0].am_id === amid) {
+            await Post.findByIdAndDelete(id)
+            res.json({ success: true })
+        } else {
+            res.json({ success: false })
+        }
     } catch (error) {
         res.status(500).json({ error: 'Some Internal Error Occured' })
     }
