@@ -29,7 +29,6 @@ router.post('/fetchonepost', fetchUser, async (req, res) => {
 router.post('/addpost', fetchUser, async (req, res) => {
     try {
         const { am_name, title, description, address, target, contact_number, amount_collected, user_count } = req.body
-        console.log(req)
 
         // Cloudinary File Upload
         let result = { image1: null, image2: null, image3: null, image4: null, image5: null, image6: null, image7: null, image8: null, image9: null, image10: null }
