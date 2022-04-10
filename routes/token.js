@@ -46,4 +46,14 @@ router.patch('/update', fetchUser, async (req, res) => {
     }
 })
 
+// ROUTE 3: Fetch Token at|PATCH /api/token/fetch | - Login Required
+router.post('/fetch', fetchUser, async (req, res) => {
+    try {
+        const response = await Token.find({ user_id: req.user.id })
+        res.json(response)
+    } catch (error) {
+        res.status(500).json({ msg: 'Some Internal Error Occured', error })
+    }
+})
+
 module.exports = router
