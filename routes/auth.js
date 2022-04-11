@@ -42,8 +42,7 @@ router.post('/createuser', [
             }
             const authToken = jwt.sign(data, process.env.JWT_SECRET)
             success = true
-            res.json({ success, authToken })
-
+            res.json({ success, message: 'Account Signed up successfully!', authToken })
         } catch (error) {
             console.error(error)
             res.status(500).send("Some Internal error occured")
@@ -60,7 +59,7 @@ router.post('/login', [
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const erArr = errors.array()
-            return res.status(400).json({ success, error: erArr })
+            return res.status(400).json({ success, message: 'Please enter valid credentials' })
         }
         try {
             const { email, password } = req.body
@@ -68,12 +67,12 @@ router.post('/login', [
             let user = await User.findOne({ email })
 
             if (!user) {
-                return res.status(400).json({ success, error: 'Please enter valid credentials' })
+                return res.status(400).json({ success, message: 'Please enter valid credentials' })
             }
 
             let passwordCompare = await bcrypt.compare(password, user.password)
             if (!passwordCompare) {
-                return res.status(400).json({ success, error: 'Please enter valid credentials' })
+                return res.status(400).json({ success, message: 'Please enter valid credentials' })
             }
 
             const data = {
@@ -83,7 +82,7 @@ router.post('/login', [
             }
             const authToken = jwt.sign(data, process.env.JWT_SECRET)
             success = true
-            res.json({ success, authToken })
+            res.json({ success, message: 'Logged in successfully!', authToken })
 
         } catch (error) {
             console.error(error)

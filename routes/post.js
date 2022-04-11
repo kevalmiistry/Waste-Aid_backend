@@ -92,7 +92,7 @@ router.post('/addpost', fetchUser, async (req, res) => {
             }
         })
 
-        res.json({ success: true, newPost })
+        res.json({ success: true, message: 'New Post Uploaded' })
 
     } catch (error) {
         res.status(500).json({ error: 'Some Internal Error Occured' })
@@ -118,9 +118,9 @@ router.post('/delete', fetchUser, async (req, res) => {
         const post = await Post.find({ _id: id })
         if (post[0].am_id === amid) {
             await Post.findByIdAndDelete(id)
-            res.json({ success: true })
+            res.json({ success: true, message: 'Post Deleted!' })
         } else {
-            res.json({ success: false })
+            res.json({ success: false, message: 'Oops! There is some error' })
         }
     } catch (error) {
         res.status(500).json({ error: 'Some Internal Error Occured' })
