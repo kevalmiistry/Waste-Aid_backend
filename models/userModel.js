@@ -20,6 +20,10 @@ const userSchema = mongoose.Schema({
     profile_url: {
         type: String,
         default: null
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     }
 })
 

@@ -5,6 +5,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
 const fetchUser = require('../middleware/fetchUser')
+const sendMail = require('../utils/Mailer')
+
 
 // ROUTE 1: Create an new Account at|POST /api/auth/createuser | - No Login Required
 router.post('/createuser', [
@@ -23,12 +25,12 @@ router.post('/createuser', [
         try {
             let user = await User.findOne({ email: req.body.email })
             if (user) {
-                return res.status(400).json({ success, error: 'An account with this email already exist' })
+                return res.status(400).json({ success, message: 'An account with this email already exist' })
             }
 
             const salt = await bcrypt.genSalt(10)
             const secPass = await bcrypt.hash(req.body.password, salt)
-            user = User.create({
+            user = await User.create({
                 fname: req.body.fname,
                 lname: req.body.lname,
                 email: req.body.email,
@@ -42,7 +44,8 @@ router.post('/createuser', [
             }
             const authToken = jwt.sign(data, process.env.JWT_SECRET)
             success = true
-            res.json({ success, message: 'Account Signed up successfully!', authToken })
+            const emailSent = await sendMail(user.email, authToken)
+            if (emailSent) res.json({ success, message: 'Account Created! Check your email for verification', authToken })
         } catch (error) {
             console.error(error)
             res.status(500).send("Some Internal error occured")
@@ -54,6 +57,7 @@ router.post('/login', [
     body('email', 'Please Enter Valid Email Address').isEmail(),
     body('password', 'Password Must Be Of 8 Characters').isLength({ min: 8 })],
     async (req, res) => {
+
         let success = false
         // if there are errors, return Bad request and errors 
         const errors = validationResult(req);
@@ -68,6 +72,9 @@ router.post('/login', [
 
             if (!user) {
                 return res.status(400).json({ success, message: 'Please enter valid credentials' })
+            }
+            if (!user.isVerified) {
+                return res.status(400).json({ success, message: 'Please Verify Your Email Address' })
             }
 
             let passwordCompare = await bcrypt.compare(password, user.password)
@@ -97,8 +104,20 @@ router.post('/getuser', fetchUser, async (req, res) => {
         const user = await User.findById(userId).select('-password')
         res.json(user)
     } catch (error) {
-        console.error(error)
         res.status(500).send("Some Internal error occured")
+    }
+})
+
+// ROUTE 4: Verify User and PATCH isVerified at|POST /api/auth/verify | - Auth Token Required
+router.patch('/verify', fetchUser, async (req, res) => {
+    try {
+        let userId = req.user.id
+        const user = await User.findByIdAndUpdate(userId, {
+            isVerified: true
+        })
+        res.send({ success: true, message: 'Email Verified!' })
+    } catch (error) {
+        res.status(500).send({ error, msg: "Some Internal error occured" })
     }
 })
 
